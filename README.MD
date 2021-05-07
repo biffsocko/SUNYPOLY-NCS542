@@ -2,6 +2,10 @@ UNYPOLY-NCS542
 # Tom Murphy 
 # Spring 2021
 
+
+docs - contains the CIS Benchmark Documents I was using for this project
+
+
 Goal:
 Implement Chapter 3 (Networking) from CIS Benchmarks for CentOS 8 and Ubuntu 20.04 LTS
 
