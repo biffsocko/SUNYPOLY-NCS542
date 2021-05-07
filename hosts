@@ -1,0 +1,11 @@
+[all]
+ubuntubox   
+centos8box
+
+[centos]
+centos8box
+
+[ubuntu]
+ubuntubox
+
+

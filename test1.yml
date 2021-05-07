@@ -1,0 +1,22 @@
+---
+
+- hosts: all
+  remote_user: root
+  #become: yes
+
+  tasks:
+  - name: add a group trmurphy
+    group:
+        gid: 21008
+        name: trmurphy
+        state: present
+
+  - name: add a user trmurphy
+    user: 
+        name: trmurphy
+        comment: Tom Murphy
+        uid: 21008
+        group: trmurphy
+        state: present
+        password: $6$CjcYHCHwa6EeQRyM$ATbpYOGpXoKXiG6ZsNnWZjAnmQvjvC.bkakTQoIb2N6niFPr4JrFKudzl0YmoTvvGfr6qQ7FFiQsBb/94FzJ30
+

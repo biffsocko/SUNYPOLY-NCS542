@@ -1,0 +1,109 @@
+#####################################################
+# TR Murphy 
+# CIS benchmark for CentOS 8 Network Section
+#
+# Notes - I kept the default firewall rules on the 
+# system.  I didn't want to break anything, however 
+# I did ensure that it was running and active
+#
+# I did not disable wireless networking - the test
+# box is a CentOS 8 Laptop - this would have made the
+# test fail
+#
+#
+###################################################
+
+
+###################################################
+# verify uncommon network prodocols are disabled
+###################################################
+- name: Copy /etc/modprobe.d/dccp.conf
+  copy:
+    src: files/dccp.conf
+    dest: /etc/modprobe.d/dccp.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy /etc/modprobe.d/sctp.conf
+  copy:
+    src: files/sctp.conf
+    dest: /etc/modprobe.d/sctp.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy /etc/modprobe.d/rds.conf
+  copy:
+    src: files/rds.conf
+    dest: /etc/modprobe.d/rds.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy /etc/modprobe.d/tipc.conf
+  copy:
+    src: files/tipc.conf
+    dest: /etc/modprobe.d/tipc.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+
+###################################################
+# verify that firewalld is installed / running
+# and enabled
+###################################################
+
+# using the dnf module over yum - dnf is the replacement
+# in RHEL/CentOS 8 - yum will work, but is just a wrapper
+# for dnf - in future versions yum may be disabled 
+- name: Verify firewalld is installed
+  dnf:
+    name: firewalld
+    state: present
+
+- name: verify firewalld is running
+  service: name=httpd enabled=yes state=started
+  ignore_errors: yes
+
+
+
+###################################################
+# network tuning parameters
+###################################################
+- name: tuning sysctl
+  sysctl:
+     name: "{{item.key}}"
+     value: "{{item.value}}"
+  with_items:
+    - {key: net.ipv4.ip_forward, value: 0}
+    - {key: net.ipv6.conf.all.forwarding, value: 0}
+    - {key: net.ipv4.conf.all.send_redirects, value: 0}
+    - {key: net.ipv4.conf.default.send_redirects, value: 0}
+    - {key: net.ipv4.conf.all.send_redirects, value: 0}
+    - {key: net.ipv4.conf.default.send_redirects, value: 0}
+    - {key: net.ipv4.conf.all.accept_source_route, value: 0}
+    - {key: net.ipv4.conf.default.accept_source_route, value: 0}
+    - {key: net.ipv6.conf.all.accept_source_route, value: 0}
+    - {key: net.ipv6.conf.default.accept_source_route, value: 0}
+    - {key: net.ipv4.conf.all.accept_redirects, value: 0}
+    - {key: net.ipv4.conf.default.accept_redirects, value: 0}
+    - {key: net.ipv6.conf.all.accept_redirects, value: 0}
+    - {key: net.ipv6.conf.default.accept_redirects, value: 0}
+    - {key: net.ipv4.conf.all.secure_redirects, value: 0}
+    - {key: net.ipv4.conf.default.secure_redirects, value: 0}
+    - {key: net.ipv4.conf.all.log_martians, value: 1}
+    - {key: net.ipv4.conf.default.log_martians, value: 1}
+    - {key: net.ipv4.icmp_ignore_bogus_error_responses, value: 1}
+    - {key: net.ipv4.icmp_echo_ignore_broadcasts, value: 1}
+    - {key: net.ipv4.icmp_ignore_bogus_error_responses, value: 1}
+    - {key: net.ipv4.conf.default.rp_filter, value: 1}
+    - {key: net.ipv4.conf.all.rp_filter, value: 1}
+    - {key: net.ipv4.conf.default.rp_filter, value: 1}
+    - {key: net.ipv4.tcp_syncookies, value: 1}
+    - {key: net.ipv6.conf.all.accept_ra, value: 0}
+    - {key: net.ipv6.conf.default.accept_ra, value: 0}
+    - {key: net.ipv6.conf.all.accept_ra, value: 0}
+    - {key: net.ipv6.conf.default.accept_ra, value: 0}
+
